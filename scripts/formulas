@@ -13,18 +13,24 @@ debug = True
 
 def main():
 
-    f = Formulas()
-
     p = argparse.ArgumentParser(
             description=u"manage and apply Formulas",
         )
 
+    p.add_argument("-c", "--config", help="Path to configuration file",
+        default='/etc/formulas/formulas.conf:~/.formulas/formulas.conf')
+
+    (args, other) = p.parse_known_args()
+
+#    print "args: {0}".format(args)
+#    print "other: {0}".format(other)
+    f = Formulas(args.config)
+
     sp = p.add_subparsers()
 
-    p_deplist = sp.add_parser("apply", help=u"apply a Formula")
-    p_deplist.add_argument("name", help=u"Formula name")
-    p_deplist.set_defaults(func=f.apply_formula)
-
+    p_apply = sp.add_parser("apply", help=u"apply a Formula")
+    p_apply.add_argument("name", help=u"Formula name")
+    p_apply.set_defaults(func=f.apply_formula)
 
     args = p.parse_args()
 
@@ -32,7 +38,7 @@ def main():
         try:
             args.func(args)
         except Exception as e:
-            print e.value
+            print e
             sys.exit(1)
     else:
         try:
