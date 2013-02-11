@@ -57,6 +57,8 @@ class Formulas:
         # add the handlers to the logger
         self.logger.addHandler(fh)
 
+        self._load_plugin()
+
     def _load_config(self, path):
         """Will create self.cfgs
 
@@ -78,12 +80,10 @@ class Formulas:
             for k, v in config.items(section):
                 self.cfgs[section][k] = v
 
-    def load_plugin(self):
+    def _load_plugin(self):
 
-        print "self.cfgs: {0}".format(self.cfgs)
+        # print "self.cfgs: {0}".format(self.cfgs)
         # config_manager object handles calls for chosen
-        # configuration management software
-#        self.logger.setLevel(eval(self.cfgs['logger']['loglevel']))
 
         cmModuleName = self.cfgs['cm']['module']
         cmClassName = self.cfgs['cm']['class']
@@ -93,15 +93,26 @@ class Formulas:
                                       globals(),
                                       locals(),
                                       [cmClassName])
-            self.config_module = ConfigManager(cmModule.__dict__[cmClassName], self.cfgs, self.logger)
+            #print "cmModule: {0}".format(cmModule)
+            self.config_manager = ConfigManager(cmModule.__dict__[cmClassName], self.cfgs, self.logger)
+            #print "self.config_manager: {0}".format(self.config_manager)
         except ImportError, e:
             self.logger.debug("Class %s in module %s not found: %s" % (cmClassName, 'plugins.{0}'.format(cmModuleName), e))
-            print "Class {0} in module {1} not found: {2}".format(cmClassName, 'plugins.{0}'.format(cmModuleName), e)
+#            print "Class {0} in module {1} not found: {2}".format(cmClassName, 'plugins.{0}'.format(cmModuleName), e)
             raise FormulasError("Class %s in module %s not found: %s" % (cmClassName, 'plugins.{0}'.format(cmModuleName), e))
-
 
     def apply_formula(self, args):
         """Apply the named Formula"""
+
+        name = args.name
+        path = None
+        host = 'localhost'
+        if args.hosts:
+            hosts = args.hosts
+        if args.path:
+            path=args.path
+
+        self.config_manager.apply(name, path, hosts)
 
         pass
 
