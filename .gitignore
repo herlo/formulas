@@ -1,3 +1,7 @@
+# custom ignores
+hosts
+
+# vim/python
 *.py[cod]
 .*sw[op]
 
