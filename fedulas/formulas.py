@@ -31,42 +31,31 @@ class Formulas:
     Formulas.
     """
 
-    def __init__(self):
+    def __init__(self, config_file=None):
         """Constructor for Formulas, will create self.cfgs and self.logger
         """
-        # config_manager object handles calls for chosen
-        # configuration management software
-
         self.cfgs = {}
 
-        for path in ['/etc/formulas', '~/.formulas']:
-            expanded_path = "%s/%s" % (os.path.expanduser(path), 'formulas.conf')
-            print "expanded_path {0}".format(expanded_path)
+        for path in config_file.split(':'):
+            expanded_path = "{0}".format(os.path.expanduser(path))
+#            print "expanded_path: {0}".format(expanded_path)
             if os.path.exists(expanded_path):
                 self._load_config(expanded_path)
 
+#        print "self.cfgs: {0}".format(self.cfgs)
+
         self.logger = logging.getLogger('formulas')
-#        self.logger.setLevel(eval(self.cfgs['logger']['loglevel']))
+        self.logger.setLevel(eval(self.cfgs['logger']['loglevel']))
 
-        cmModuleName = self.cfgs['cm']['module']
-        cmClassName = self.cfgs['cm']['class']
+        # create file handler which logs even debug messages
+        fh = logging.FileHandler(self.cfgs['logger']['file'])
+        fh.setLevel(eval(self.cfgs['logger']['loglevel']))
 
-        #remoteModule = __import__(remoteModuleName,
-        #                          globals(),
-        #                          locals(),
-        #                          [remoteClassName])
-        #self.gitremote = GitRemote(remoteModule.__dict__[remoteClassName], self.cfgs, self.logger)
-
-        try:
-            cmModule = __import__('plugins.{0}'.format(cmModuleName),
-                                      globals(),
-                                      locals(),
-                                      [cmClassName])
-            self.config_module = ConfigManager(cmModule.__dict__[cmClassName], self.cfgs, self.logger)
-        except ImportError, e:
-            self.logger.debug("Class %s in module %s not found: %s" % (cmClassName, 'plugins.{0}'.format(cmModuleName), e))
-            print "Class {0} in module {1} not found: {2}".format(cmClassName, 'plugins.{0}'.format(cmModuleName), e)
-            raise FormulasError("Class %s in module %s not found: %s" % (cmClassName, 'plugins.{0}'.format(cmModuleName), e))
+        # create formatter and add it to the handlers
+        formatter = logging.Formatter(self.cfgs['logger']['format'])
+        fh.setFormatter(formatter)
+        # add the handlers to the logger
+        self.logger.addHandler(fh)
 
     def _load_config(self, path):
         """Will create self.cfgs
@@ -89,8 +78,30 @@ class Formulas:
             for k, v in config.items(section):
                 self.cfgs[section][k] = v
 
+    def load_plugin(self):
 
-    def apply_formula(self, name):
+        print "self.cfgs: {0}".format(self.cfgs)
+        # config_manager object handles calls for chosen
+        # configuration management software
+#        self.logger.setLevel(eval(self.cfgs['logger']['loglevel']))
+
+        cmModuleName = self.cfgs['cm']['module']
+        cmClassName = self.cfgs['cm']['class']
+
+        try:
+            cmModule = __import__('plugins.{0}'.format(cmModuleName),
+                                      globals(),
+                                      locals(),
+                                      [cmClassName])
+            self.config_module = ConfigManager(cmModule.__dict__[cmClassName], self.cfgs, self.logger)
+        except ImportError, e:
+            self.logger.debug("Class %s in module %s not found: %s" % (cmClassName, 'plugins.{0}'.format(cmModuleName), e))
+            print "Class {0} in module {1} not found: {2}".format(cmClassName, 'plugins.{0}'.format(cmModuleName), e)
+            raise FormulasError("Class %s in module %s not found: %s" % (cmClassName, 'plugins.{0}'.format(cmModuleName), e))
+
+
+    def apply_formula(self, args):
         """Apply the named Formula"""
 
         pass
+
