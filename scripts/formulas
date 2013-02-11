@@ -13,22 +13,34 @@ debug = True
 
 def main():
 
-    p = argparse.ArgumentParser(
+    cp = argparse.ArgumentParser(
             description=u"manage and apply Formulas",
+            add_help=False
         )
 
-    p.add_argument("-c", "--config", help="Path to configuration file",
+    cp.add_argument("-c", "--config", help="Path to configuration file",
         default='/etc/formulas/formulas.conf:~/.formulas/formulas.conf')
 
-    (args, other) = p.parse_known_args()
+    (args, other) = cp.parse_known_args()
 
 #    print "args: {0}".format(args)
 #    print "other: {0}".format(other)
     f = Formulas(args.config)
 
+    p = argparse.ArgumentParser(
+        # Inherit options from config_parser
+        parents=[cp],
+        # print script description with -h/--help
+        description=__doc__,
+        # Don't mess with format of description
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
     sp = p.add_subparsers()
 
     p_apply = sp.add_parser("apply", help=u"apply a Formula")
+    p_apply.add_argument("-p", "--path", help="Override default path to formulas")
+    p_apply.add_argument("-o", "--hosts", default=['localhost'], nargs='+', help="Host(s) to apply formula. Default: localhost")
     p_apply.add_argument("name", help=u"Formula name")
     p_apply.set_defaults(func=f.apply_formula)
 
