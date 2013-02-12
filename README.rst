@@ -1,11 +1,24 @@
+**This document is a draft**
+
+Give Credit Where Credit is Due
+===============================
+
+The idea was formed around a concept to extend the ability to manage a
+local system with configuration management tools. The 
+`https://fedoraproject.org/wiki/Fedora_formulas initial idea`_ was
+put forth by `https://fedoraproject.org/wiki/User:Kevin Kevin Fenzi`_,
+Infrastructure Lead at the `http://fedoraproject.org Fedora Project`_. 
+
+This document and repository is my take on how formulas can be implemented.
+
 What are Formulas
 =================
 
 Formulas provide an better way to manage local configurations.
 
-The idea was formed around a concept to extend the ability to manage a
-local system with configuration management tools. The primary CM tool
-supported is ansible, but it is possible to support other CM tools.
+
+The primary CM tool supported is ansible, but it is possible to support
+other CM tools.
 
 A Formula is idempotent, meaning that it can be applied and each time
 the resulting configuration is the same. The value of this is that one
@@ -87,12 +100,11 @@ Formulas can be overridden by a config option::
 
   # formulas apply formula_one --remote_source=file:///var/lib/formulas,file://home/herlo/formulas
 
-Eventually, the goal is to have Formulas available in 'FirstBoot'. In Fedora
+Eventually, the hope is to have Formulas available in 'FirstBoot'. In Fedora
 18, FirstBoot was replaced by anaconda, probably called 'Stage III'. Because
 anaconda Stage III now provides this functionality, it is much more flexible
 than the old FirstBoot. This makes adding a GUI interface for formulas much
 less complex. To that end, the list of 'approved' Formulas may easily be
 available and/or configurable at FirstBoot. Having something like this makes
 Formulas a 'killer' feature for Fedora 18 and beyond.
-
 
