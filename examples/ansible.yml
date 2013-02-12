@@ -1,0 +1,6 @@
+# bob.yml test playbook
+#
+- hosts: localhost
+  tasks:
+    - name: echo hello world
+      action: shell /bin/echo hello world > /tmp/bob_says_hello_world
