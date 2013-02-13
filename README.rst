@@ -5,9 +5,9 @@ Give Credit Where Credit is Due
 
 The idea was formed around a concept to extend the ability to manage a
 local system with configuration management tools. The 
-`https://fedoraproject.org/wiki/Fedora_formulas initial idea`_ was
-put forth by `https://fedoraproject.org/wiki/User:Kevin Kevin Fenzi`_,
-Infrastructure Lead at the `http://fedoraproject.org Fedora Project`_. 
+`initial idea <https://fedoraproject.org/wiki/Fedora_formulas>`_ was
+put forth by `Kevin Fenzi <https://fedoraproject.org/wiki/User:Kevin>`_,
+Infrastructure Lead at the ` Fedora Project <http://fedoraproject.org>`_.
 
 This document and repository is my take on how formulas can be implemented.
 
