@@ -10,4 +10,6 @@ class ConfigManager:
         self.cm = cm_class(cfgs, logger)
 
     def apply(self, name, path, hosts):
+        # lookup and download formula
+        # then validate the gpg pubkey of the formula from remote
         return self.cm.apply(name, path, hosts)
