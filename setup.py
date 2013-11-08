@@ -8,6 +8,6 @@ setup(name='formulas',
       author='Clint Savage',
       author_email='herlo1@gmail.com',
       url='http://github.com/herlo/formulas/',
-      packages=['fedulas'],
+      packages=['fedulas', 'plugins'],
       scripts=['scripts/formulas'],
      )
